@@ -1,20 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { Text, View } from "react-native";
+import { myStyle } from "./styles/myStyle";
+import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
+import Home from "./screens/Home";
+import Welcome from "./screens/Welcome";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [isShowSplash, setIsShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsShowSplash(false); 
+    }, 3000);
+
+    return () => clearTimeout(timer); 
+  }, []);
+
+  if (isShowSplash) {
+    return <Welcome />;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
