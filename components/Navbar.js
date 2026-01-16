@@ -20,7 +20,13 @@ const Navbar = () => {
       <TouchableOpacity 
         style={isActive ? styles.navItemActive : styles.navItem} 
         activeOpacity={0.8}
-        onPress={() => navigation.navigate(routeName)} 
+        onPress={() => {
+          if (routeName === 'Home') {
+                navigation.navigate('Home', { refreshId: new Date().getTime() });
+            } else {
+                navigation.navigate(routeName);
+            }
+        }} 
       >
         <View style={isActive ? styles.activeCircle : styles.iconWrapper}>
           <IconComponent 
