@@ -21,6 +21,8 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { db } from "../firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const bg = require("../assets/login.png");
 
 const Login = ({ navigation }) => {
@@ -46,6 +48,12 @@ const Login = ({ navigation }) => {
 
       if (!querySnapshot.empty) {
         Alert.alert("ยินดีต้อนรับ", "เข้าสู่ระบบสำเร็จ");
+
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+        const currentUser = { ...userData, id: userDoc.id };
+
+        await AsyncStorage.setItem("currentUser", JSON.stringify(currentUser));
 
         setEmail("");
         setPassword("");
