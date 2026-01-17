@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Text, View, Pressable, Alert, Platform, Image, ScrollView, TouchableOpacity, Linking } from "react-native";
 import Navbar from "../components/Navbar";
-import TabBar from "../components/TabBar";
 import { LinearGradient } from "expo-linear-gradient";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Feather } from "@expo/vector-icons"; 
 import * as ImagePicker from "expo-image-picker";
+import HeaderBar from "../components/HeaderBar";
 
 const Add = () => {
   const [pressed, setPressed] = useState(false);
@@ -113,7 +113,8 @@ const Add = () => {
 
   return (
     <LinearGradient colors={["#E9E5E5", "#B8E1F8"]} style={{ flex: 1 }}>
-      <TabBar text={"Upload files"} />
+
+      <HeaderBar title={"Upload files"} />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
         <Pressable

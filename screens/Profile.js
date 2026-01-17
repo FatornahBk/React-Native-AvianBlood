@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Navbar from '../components/Navbar';
 import { myStyle } from '../styles/myStyle';
 import TabBar from '../components/TabBar';
+import HeaderBar from '../components/HeaderBar';
 
 const logo = require('../assets/logo1.png');
 
@@ -49,7 +50,9 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      <TabBar text={"Profile"} />
+
+      <HeaderBar title={"Profile"} />
+
       <ScrollView contentContainerStyle={{ paddingBottom: 110 }}>
 
         {/* Profile Card */}

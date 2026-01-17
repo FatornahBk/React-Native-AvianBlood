@@ -3,6 +3,7 @@ import { View, FlatList } from "react-native";
 import TabBar from "../components/TabBar";
 import Navbar from "../components/Navbar";
 import HistoryItemCard from "../components/HistoryItemCard";
+import HeaderBar from "../components/HeaderBar";
 
 const MOCK_HISTORY = [
   {
@@ -48,7 +49,7 @@ export default function History() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff", position: "relative" }}>
-      <TabBar text={"History"} />
+      <HeaderBar title={"History"} />
 
       <FlatList
         data={items}
