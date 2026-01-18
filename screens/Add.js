@@ -72,6 +72,7 @@ const Add = () => {
             image_path: file.base64, 
             original_filename: file.name,
             batch_id: batchId, 
+            status: "Pending",
             uploaded_at: serverTimestamp(),
         });
 

@@ -1,24 +1,33 @@
-import React, { useMemo } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from "react-native";
+import React, { useMemo, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ResultTable from "./ResultTable";
 
-export default function HistoryDetailView({
-  item,
-  onBack,
-  onDelete,
-}) {
+export default function HistoryDetailView({ item, onBack, onDelete }) {
+  const [currentImage, setCurrentImage] = useState(null);
+
+  const imageList = useMemo(() => {
+    if (item?.images && item.images.length > 0) {
+      return item.images;
+    }
+    return item?.thumbnailUri ? [item.thumbnailUri] : [];
+  }, [item]);
+
+  useEffect(() => {
+    if (imageList.length > 0) {
+      setCurrentImage(imageList[0]);
+    }
+  }, [imageList]);
+
   const rows = useMemo(() => {
-    return (
-      item?.results ?? [
-        { cellType: "Basophil", count: 41, confidence: 0.9, color: "#06b6d4" },
-        { cellType: "Eosinophil", count: 42, confidence: 0.9, color: "#7c3aed" },
-        { cellType: "Heterophil", count: 44, confidence: 0.9, color: "#2563eb" },
-        { cellType: "Lymphocyte", count: 45, confidence: 0.9, color: "#ef4444" },
-        { cellType: "Monocyte", count: 45, confidence: 0.9, color: "#ec4899" },
-        { cellType: "Thrombocyte", count: 45, confidence: 0.9, color: "#22c55e" },
-      ]
-    );
+    return item?.results; 
   }, [item]);
 
   return (
@@ -40,26 +49,48 @@ export default function HistoryDetailView({
         <Text style={styles.datetime}>{item?.datetime ?? ""}</Text>
 
         <View style={styles.previewBox}>
-          {!!item?.thumbnailUri ? (
-            <Image source={{ uri: item.thumbnailUri }} style={styles.previewImg} />
+          {!!currentImage ? (
+            <Image source={{ uri: currentImage }} style={styles.previewImg} />
           ) : (
             <View style={styles.previewImg} />
           )}
 
           <View style={styles.thumbStrip}>
             <Ionicons name="chevron-back" size={18} color="#111827" />
-            <View style={styles.smallThumbRow}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <View key={i} style={[styles.smallThumb, i === 2 && styles.smallThumbActive]} />
-              ))}
-            </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 4 }}
+            >
+              <View style={styles.smallThumbRow}>
+                {imageList.map((imgUri, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => setCurrentImage(imgUri)}
+                    activeOpacity={0.8}
+                  >
+                    <Image
+                      source={{ uri: imgUri }}
+                      style={[
+                        styles.smallThumb,
+                        currentImage === imgUri && styles.smallThumbActive,
+                      ]}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+
             <Ionicons name="chevron-forward" size={18} color="#111827" />
           </View>
         </View>
 
-        <View style={{ marginTop: 14 }}>
-          <ResultTable rows={rows} />
-        </View>
+        {rows && rows.length > 0 && (
+          <View style={{ marginTop: 14 }}>
+            <ResultTable rows={rows} />
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -73,7 +104,11 @@ const styles = StyleSheet.create({
     padding: 14,
     backgroundColor: "#fff",
   },
-  topRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 
   backBtn: {
     width: 34,
@@ -103,7 +138,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#f3f4f6",
   },
-  previewImg: { width: "100%", height: "100%" },
+  previewImg: { width: "100%", height: "100%", resizeMode: "cover" },
 
   thumbStrip: {
     position: "absolute",
@@ -118,6 +153,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   smallThumbRow: { flexDirection: "row", gap: 8, alignItems: "center" },
-  smallThumb: { width: 26, height: 26, backgroundColor: "#d1d5db", borderRadius: 3 },
-  smallThumbActive: { backgroundColor: "#e5e7eb", borderWidth: 1.2, borderColor: "#111827" },
+  smallThumb: {
+    width: 26,
+    height: 26,
+    backgroundColor: "#d1d5db",
+    borderRadius: 3,
+  },
+  smallThumbActive: {
+    backgroundColor: "#e5e7eb",
+    borderWidth: 1.5,
+    borderColor: "#111827",
+  },
 });

@@ -5,7 +5,11 @@ export default function HistoryItemCard({ item, onPress = () => {} }) {
   const dtText = formatDateTime(item.datetime);
 
   return (
-    <TouchableOpacity style={styles.card} activeOpacity={0.85} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.85}
+      onPress={onPress}
+    >
       <View style={styles.left}>
         <Text style={styles.title} numberOfLines={2}>
           {item.title}
@@ -14,15 +18,19 @@ export default function HistoryItemCard({ item, onPress = () => {} }) {
         <View style={styles.metaRow}>
           <Text style={styles.datetime}>{dtText}</Text>
 
-          <Badge
-            text={item.status}
-            variant={item.status === "Predict" ? "success" : "warning"}
-          />
+          {!!item.status && (
+            <Badge
+              text={item.status}
+              variant={item.status === "Predict" ? "success" : "warning"}
+            />
+          )}
 
-          <Badge
-            text={item.stain}
-            variant={item.stain === "Wright" ? "purple" : "danger"}
-          />
+          {!!item.stain && (
+            <Badge
+              text={item.stain}
+              variant={item.stain === "Wright" ? "purple" : "danger"}
+            />
+          )}
         </View>
       </View>
 
@@ -130,7 +138,7 @@ const styles = StyleSheet.create({
   },
 
   badgeSuccess: { backgroundColor: "#B9F6CA" }, // เขียว Predict
-  badgeWarning: { backgroundColor: "#FFD59E" }, // ส้ม Pending 
-  badgeDanger: { backgroundColor: "#FFB3B3" },  // แดง Giemsa
-  badgePurple: { backgroundColor: "#D6C4FF" },  // ม่วง Wright
+  badgeWarning: { backgroundColor: "#FFD59E" }, // ส้ม Pending
+  badgeDanger: { backgroundColor: "#FFB3B3" }, // แดง Giemsa
+  badgePurple: { backgroundColor: "#D6C4FF" }, // ม่วง Wright
 });
