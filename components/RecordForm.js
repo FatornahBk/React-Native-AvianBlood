@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
 
 export default function RecordForm({
   selectedImages = [],
@@ -11,7 +11,7 @@ export default function RecordForm({
   return (
     <View style={styles.wrap}>
       <TouchableOpacity onPress={onBack} style={styles.backBtn} activeOpacity={0.85}>
-        <Text style={{ fontWeight: "900" }}></Text>
+        <Text style={{ fontWeight: "900", color: "#0F2C42" }}>{"< Back"}</Text>
       </TouchableOpacity>
 
       <View style={styles.panel}>
@@ -19,7 +19,20 @@ export default function RecordForm({
 
         <View style={styles.grid}>
           {selectedImages.slice(0, 9).map((img) => (
-            <View key={img.id} style={styles.tile} />
+            <View key={img.id} style={styles.gridItem}>
+              {/* กล่องใส่รูปภาพ */}
+              <View style={styles.thumbBox}>
+                <Image 
+                  source={{ uri: img.uri }} 
+                  style={styles.img} 
+                  resizeMode="cover"
+                />
+              </View>
+              {/* ชื่อไฟล์ใต้รูป */}
+              <Text style={styles.imgName} numberOfLines={1}>
+                {img.name}
+              </Text>
+            </View>
           ))}
         </View>
       </View>
@@ -76,17 +89,35 @@ export default function RecordForm({
 
 const styles = StyleSheet.create({
   wrap: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 110 },
-  backBtn: { width: 40, height: 40, borderRadius: 10, backgroundColor: "rgba(255,255,255,0.8)", alignItems: "center", justifyContent: "center" },
+  backBtn: { marginBottom: 10 },
 
   panel: {
-    marginTop: 10,
     backgroundColor: "rgba(255,255,255,0.9)",
     borderRadius: 22,
     padding: 14,
   },
-  h: { textAlign: "center", fontWeight: "900", color: "#2A64A8", marginBottom: 12 },
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: 10, justifyContent: "space-between" },
-  tile: { width: "30%", height: 70, borderRadius: 12, backgroundColor: "#e5e7eb" },
+  h: { textAlign: "center", fontWeight: "900", color: "#0F2C42", marginBottom: 12 },
+  
+  grid: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" },
+  gridItem: { width: "30%", marginBottom: 12 },
+  
+  thumbBox: {
+    width: "100%",
+    height: 80, // กำหนดความสูงให้ชัดเจน
+    borderRadius: 12,
+    backgroundColor: "#e5e7eb",
+    overflow: "hidden", // เพื่อให้รูปไม่ล้นขอบโค้ง
+  },
+  img: {
+    width: "100%",
+    height: "100%",
+  },
+  imgName: {
+    marginTop: 4,
+    fontSize: 10,
+    color: "#6b7280",
+    textAlign: "center",
+  },
 
   formBox: {
     marginTop: 14,
@@ -94,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 14,
   },
-  lab: { fontWeight: "800", color: "#111827", marginBottom: 6, marginTop: 10 },
+  lab: { fontWeight: "800", color: "#0091ff", marginBottom: 6, marginTop: 10 },
   input: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -106,10 +137,10 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", gap: 10 },
 
   saveBtn: {
-    marginTop: 14,
+    marginTop: 20,
     alignSelf: "center",
-    width: 180,
-    height: 42,
+    width: "100%",
+    height: 44,
     borderRadius: 999,
     backgroundColor: "#9ca3af",
     alignItems: "center",

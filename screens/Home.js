@@ -1,18 +1,44 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Image, Text, View, ScrollView, RefreshControl } from "react-native";
+import { collection, query, orderBy, getDocs } from "firebase/firestore"; // Import เพิ่ม
+import { db } from "../firebaseConfig"; // Import เพิ่ม
+
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
 const logo = require("../assets/logo1.png");
 
 const Home = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
+  const [posts, setPosts] = useState([]); // State เก็บข้อมูล Predictions
   const scrollViewRef = useRef(null);
 
-  const onRefresh = useCallback(() => {
+  // ฟังก์ชันดึงข้อมูล Predictions
+  const fetchPosts = async () => {
+    try {
+      const q = query(
+        collection(db, "predictions"), // ชื่อตารางต้องตรงกับใน Firebase (ตัวเล็ก/ใหญ่สำคัญ)
+        orderBy("created_at", "desc")
+      );
+      const querySnapshot = await getDocs(q);
+      const fetchedPosts = [];
+      querySnapshot.forEach((doc) => {
+        fetchedPosts.push({ id: doc.id, ...doc.data() });
+      });
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.log("Error fetching posts:", error);
+    }
+  };
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+    await fetchPosts();
+    setRefreshing(false);
+  }, []);
+
+  // ดึงข้อมูลเมื่อโหลดหน้า
+  useEffect(() => {
+    fetchPosts();
   }, []);
 
   useEffect(() => {
@@ -64,8 +90,17 @@ const Home = ({ navigation, route }) => {
           <Text style={{ opacity: 0.5 }}>chicken blood cells.</Text>
         </View>
 
-        <Post />
-        <Post />
+        {/* วนลูปแสดง Post ตามข้อมูลที่ได้จาก Predictions */}
+        {posts.map((item) => (
+          <Post key={item.id} data={item} />
+        ))}
+
+        {posts.length === 0 && (
+          <View style={{ padding: 20, alignItems: 'center' }}>
+            <Text style={{ color: 'gray' }}>กำลังโหลดข้อมูล หรือ ไม่มีโพสต์...</Text>
+          </View>
+        )}
+
       </ScrollView>
 
       <Navbar />
