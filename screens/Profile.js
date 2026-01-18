@@ -121,6 +121,20 @@ export default function Profile({ navigation }) {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      // ล้างค่าทั้งหมดใน AsyncStorage
+      await AsyncStorage.clear();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } catch (error) {
+      console.log("Logout Error:", error);
+      Alert.alert("Error", "เกิดข้อผิดพลาดในการออกจากระบบ");
+    }
+  };
+
   return (
     <View style={{ flex: 1, position: "relative" }}>
       <HeaderBar title={"Profile"} />
@@ -303,6 +317,41 @@ export default function Profile({ navigation }) {
             keyboardType="phone-pad"
             onChangeText={(t) => setDraft((p) => ({ ...p, phone_number: t }))}
           />
+        </View>
+
+        {/* Logout Button */}
+        <View
+          style={{ paddingHorizontal: 18, marginTop: 30, marginBottom: 20 }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert("Confirm Logout", "คุณต้องการออกจากระบบใช่หรือไม่?", [
+                { text: "Cancel", style: "cancel" },
+                { text: "Logout", style: "destructive", onPress: handleLogout },
+              ]);
+            }}
+            style={{
+              backgroundColor: "#EF4444", 
+              paddingVertical: 14,
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+              shadowColor: "#EF4444",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.2,
+              shadowRadius: 5,
+              elevation: 4, 
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <Ionicons name="log-out-outline" size={20} color="white" />
+              <Text style={{ color: "white", fontWeight: "700", fontSize: 16 }}>
+                Log Out
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
