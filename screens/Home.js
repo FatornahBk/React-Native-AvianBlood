@@ -30,7 +30,7 @@ const Home = ({ navigation, route }) => {
   const checkUserAndFetch = async () => {
     setLoading(true);
 
-    const user = getLocalUser();
+    const user = await getLocalUser();
 
     if (user) {
       await loadData();

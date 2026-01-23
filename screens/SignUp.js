@@ -15,6 +15,7 @@ import {
 import { myStyle } from "../styles/myStyle";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import NetInfo from "@react-native-community/netinfo";
 
 import { createUser } from "../services/firebase-service";
 
@@ -38,6 +39,12 @@ const SignUp = ({ navigation }) => {
       password === ""
     ) {
       Alert.alert("แจ้งเตือน", "กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      return;
+    }
+
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      Alert.alert("ไม่มีการเชื่อมต่อ", "กรุณาตรวจสอบอินเทอร์เน็ตของคุณ");
       return;
     }
 

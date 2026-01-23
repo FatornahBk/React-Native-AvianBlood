@@ -18,6 +18,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
+import NetInfo from "@react-native-community/netinfo";
+
 import { checkUser } from "../services/firebase-service";
 import { saveLocalUser, getLocalUser } from "../services/sqlite-service";
 
@@ -43,12 +45,18 @@ const Login = ({ navigation }) => {
       return;
     }
 
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      Alert.alert("ไม่มีการเชื่อมต่อ", "กรุณาตรวจสอบอินเทอร์เน็ตของคุณ");
+      return;
+    }
+
     try {
       const userData = await checkUser(email, password);
 
       if (userData) {
         console.log("Login Success, saving to SQLite...");
-        const isSaved = saveLocalUser({
+        const isSaved = await saveLocalUser({
           name: userData.name || "",
           username: userData.username || "",
           email: userData.email,
