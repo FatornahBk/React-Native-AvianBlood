@@ -45,8 +45,8 @@ React-Native-AvianBlood/
 ---
 ## Getting Started
 ### 1. Clone the repository
-git clone [https://github.com/NaiSyntaxSultan/React-Native-AvianBlood.git](https://github.com/NaiSyntaxSultan/React-Native-AvianBlood.git)
+```git clone [https://github.com/NaiSyntaxSultan/React-Native-AvianBlood.git](https://github.com/NaiSyntaxSultan/React-Native-AvianBlood.git)```
 ### 2. Install dependencies
-npm install
+```npm install```
 ### 3. Run the app
-npm start
+```npm start```
